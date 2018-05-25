@@ -22,14 +22,12 @@ Tested on Ubuntu 10.04. Uses the pgbouncer init script.
 
 * Debian
 * Ubuntu
-
+* (Joyent) SmartOS
 
 Attributes
 ==========
 
-
 This cookbook uses many attributes, broken up into a few different kinds.
-
 
 * `node['pgbouncer']['databases']` - dictionary consisting of database names with connection info, default {}
 * `node['pgbouncer']['userlist']` - dictionary consisting of usernames with passwords, used in the userlist.txt file, default {}
@@ -102,24 +100,15 @@ For example, to create a basic connection pooler role for PostgreSQL databases:
     )
 
 
-## License and Author
+## Maintainer
 
-Copyright:: 2013, Wanelo, Inc
+**[Konstantin Gredeskoul](https://github.com/kigster)** is the current maintainer of this cookbook.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+Find me on Twitter as [@kig](https://twitter.com/kig) and my [blog](https://kig.re).
 
-    http://www.apache.org/licenses/LICENSE-2.0
+## Acknowledgements
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-## Attribution
-
-This was initially forked from a cookbook by Christoph Krybus, found at
-https://github.com/ckrybus/chef-pgbouncer. We've made so many changes that
-it is no longer anything like the original.
+ * [Christoph Krybus](https://github.com/ckrybus/chef-pgbouncer)
+ * [Eric Saxby](https://github.com/sax)
+ * [Wanelo, Inc](https://github.com/wanelo-chef)
+ 
