@@ -1,0 +1,57 @@
+.project
+.idea
+
+# YARD artifacts
+# chef stuff
+# ruby/bundler files
+# vagrant stuff
+*#
+**/.DS_Store
+**/log
+*.bk
+*.bkup
+*.gem
+*.log
+*.pem
+*.rbc
+*.tmp
+*.un~
+*~
+.#*
+.*.sw[a-z]
+.bundle
+.chef
+.config
+.coverage/
+.idea
+.kitchen
+.kitchen.local.yml
+.kitchen/
+.kitchen/logs
+.ruby-gemset
+.ruby-version
+.rvmrc
+.vagrant
+.vagrant.d/
+.vagrant/
+.yardoc
+.zero-knife.rb
+/cookbooks
+Berksfile.lock
+Gemfile.lock
+InstalledFiles
+Policyfile.lock.json
+\#*#
+_Store
+_yardoc
+coverage
+doc/
+lib/bundler/man
+pkg
+rdoc
+spec/reports
+test/tmp
+test/version_tmp
+tmp
+vendor/
+spec.std*
