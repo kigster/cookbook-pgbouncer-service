@@ -10,7 +10,7 @@ action :install do |new_resource|
 
   template auth_file do
     source 'userlist.txt.erb'
-    cookbook 'pgbouncer'
+    cookbook 'pgbouncer-service'
     owner node['pgbouncer']['os_user']
     group node['pgbouncer']['os_group']
     mode 0644
@@ -20,7 +20,7 @@ action :install do |new_resource|
 
   template "/etc/pgbouncer/#{service_name}.ini" do
     source 'pgbouncer.ini.erb'
-    cookbook 'pgbouncer'
+    cookbook 'pgbouncer-service'
     owner node['pgbouncer']['os_user']
     group node['pgbouncer']['os_group']
     mode 0644

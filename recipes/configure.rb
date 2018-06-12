@@ -49,7 +49,7 @@ end
 
 template '/etc/pgbouncer/pgbouncer.ini' do
   source 'pgbouncer.ini.erb'
-  cookbook 'pgbouncer'
+  cookbook 'pgbouncer-service'
   owner node['pgbouncer']['os_user']
   group node['pgbouncer']['os_group']
   mode '644'
