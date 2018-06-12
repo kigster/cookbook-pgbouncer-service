@@ -5,11 +5,11 @@ maintainer_email 'kigster@gmail.com'
 license 'MIT'
 description 'Installs pgBouncer from either sources or packages, configures the connections, and sets up a service.'
 
-version '0.2.2'
+version '0.2.3'
 
 chef_version '>= 12'
 
-recipe 'pgbouncer-service', 'Installs and configures pgbouncer as a service'  
+recipe 'pgbouncer-service', 'Installs and configures pgbouncer as a service'
 
 depends 'resource-control'
 depends 'smf'
