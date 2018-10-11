@@ -26,7 +26,6 @@ case node['platform']
         
         [Service]
         User=#{node['pgbouncer']['os_user']}
-        WorkingDirectory=/home/#{node['pgbouncer']['os_user']}
         ExecStart=#{node['pgbouncer']['source']['install_dir']}/bin/pgbouncer /etc/pgbouncer/pgbouncer.ini
         ExecReload=#{node['pgbouncer']['source']['install_dir']}/bin/pgbouncer -R /etc/pgbouncer/pgbouncer.ini
         Restart=always
