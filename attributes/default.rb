@@ -7,8 +7,9 @@ case node['platform_family']
     default['pgbouncer']['source']['install_dir'] = '/usr/local'
 end
 
-default['pgbouncer']['install_method'] = 'source'
-default['pgbouncer']['source']['url']  = "https://pgbouncer.github.io/downloads/files/1.8.1/pgbouncer-1.8.1.tar.gz"
+default['pgbouncer']['install_method']   = 'source'
+default['pgbouncer']['source']['url']    = "https://pgbouncer.github.io/downloads/files/1.9.0/pgbouncer-1.9.0.tar.gz"
+default['pgbouncer']['source']['sha256'] = "39eca9613398636327e79cbcbd5b41115035bca9ca1bd3725539646468825f04"
 
 default['pgbouncer']['databases'] = {}
 default['pgbouncer']['userlist']  = {}
