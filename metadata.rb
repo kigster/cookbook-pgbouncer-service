@@ -17,8 +17,8 @@ depends 'smf'
 supports 'smartos'
 supports 'ubuntu'
 
-issues_url 'https://github.com/kigster/pgbouncer-service-cookbook/issues'
-source_url 'https://github.com/kigster/pgbouncer-service-cookbook'
+issues_url 'https://github.com/kigster/cookbook-pgbouncer-service/issues'
+source_url 'https://github.com/kigster/cookbook-pgbouncer-service'
 
 attribute 'pgbouncer/install_method',
           display_name: 'PgBouncer install method',
