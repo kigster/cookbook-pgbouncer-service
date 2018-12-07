@@ -1,0 +1,24 @@
+sudo: required
+dist: trusty
+addons:
+  apt:
+    sources:
+    - chef-current-trusty
+    packages:
+    - chefdk
+branches:
+  only:
+  - master
+env:
+  matrix:
+  - INSTANCE=smoke-ubuntu-1604
+  - INSTANCE=smoke-ubuntu-1704
+  - INSTANCE=smoke-ubuntu-1804
+before_script:
+- eval "$(chef shell-init bash)"
+- chef --version
+- cookstyle --version
+- foodcritic --version
+- berks
+script:
+- chef exec rspec

@@ -40,7 +40,6 @@ case node['platform']
     end
 end
 
-
 directory '/etc/pgbouncer' do
   owner node['pgbouncer']['os_user']
   mode '0755'
