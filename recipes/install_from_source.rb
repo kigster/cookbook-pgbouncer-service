@@ -23,9 +23,9 @@ case node['platform']
 
     execute 'build pgbouncer' do
       command [
-                "cd #{Chef::Config[:file_cache_path]}/#{local_dir}",
-                "./configure --with-libevent=/opt/local --prefix=#{node['pgbouncer']['source']['install_dir']}",
-                'make install'
+                  "cd #{Chef::Config[:file_cache_path]}/#{local_dir}",
+                  "./configure --with-libevent=/opt/local --prefix=#{node['pgbouncer']['source']['install_dir']}",
+                  'make install'
               ].join(' && ')
 
       environment 'CFLAGS'   => '-m64',
@@ -38,9 +38,9 @@ case node['platform']
 
     execute 'build pgbouncer' do
       command [
-                "cd #{Chef::Config[:file_cache_path]}/#{local_dir}",
-                "./configure --prefix=#{node['pgbouncer']['source']['install_dir']}",
-                'make install'
+                  "cd #{Chef::Config[:file_cache_path]}/#{local_dir}",
+                  "./configure --prefix=#{node['pgbouncer']['source']['install_dir']}",
+                  'make install'
               ].join(' && ')
       not_if { File.exist?("#{node['pgbouncer']['source']['install_dir']}/bin/pgbouncer") }
     end
