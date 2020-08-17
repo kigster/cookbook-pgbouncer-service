@@ -1,89 +1,67 @@
-service 'pgbouncer' do
-  action :nothing
-  supports status: true, start: true, stop: true, restart: true, reload: false
+systemd_unit 'pgbouncer.service' do
+  content({
+    Unit: {
+      Description: 'Connection pooler for PostgreSQL',
+      Documentation: 'https://www.pgbouncer.org/',
+    },
+    Service: {
+      # Type notify seems broken for now: https://github.com/pgbouncer/pgbouncer/issues/492
+      Type: 'simple',
+      User: 'postgres',
+      ExecStart: '/usr/sbin/pgbouncer /etc/pgbouncer/pgbouncer.ini',
+      ExecReload: '/bin/kill -HUP $MAINPID',
+      KillSignal: 'SIGINT',
+    },
+    Install: {
+      WantedBy: 'multi-user.target',
+    },
+  })
+  action [:create, :enable, :start]
 end
-
-case node['platform']
-  when 'smartos'
-
-    smf 'pgbouncer' do
-      start_command "#{node['pgbouncer']['source']['install_dir']}/bin/pgbouncer -d -u #{node['pgbouncer']['os_user']} /etc/pgbouncer/pgbouncer.ini"
-      refresh_command ':kill -HUP'
-      stop_command ':kill'
-      start_timeout 30
-      stop_timeout 30
-      working_directory '/'
-
-      environment 'LD_LIBRARY_PATH' => '/opt/local/lib'
-    end
-
-  else
-    systemd_unit 'pgbouncer.service' do
-      content <<-EOF.gsub(/^\s+/, '')
-        [Unit]
-        Description=PgBouncer
-        After=network.target
-        
-        [Service]
-        User=#{node['pgbouncer']['os_user']}
-        WorkingDirectory=/home/#{node['pgbouncer']['os_user']}
-        ExecStart=#{node['pgbouncer']['source']['install_dir']}/bin/pgbouncer /etc/pgbouncer/pgbouncer.ini
-        ExecReload=#{node['pgbouncer']['source']['install_dir']}/bin/pgbouncer -R /etc/pgbouncer/pgbouncer.ini
-        Restart=always
-        RestartSec=3
-        
-        [Install]
-        WantedBy=multi-user.target
-      EOF
-
-      action [:create, :enable]
-    end
-end
-
 
 directory '/etc/pgbouncer' do
   owner node['pgbouncer']['os_user']
   mode '0755'
-  not_if { File.directory?('/etc/pgbouncer') }
+end
+
+file '/etc/pgbouncer/databases.ini' do
+  owner node['pgbouncer']['os_user']
+  group node['pgbouncer']['os_group']
+  mode '0644'
+  action :create_if_missing
+end
+
+file '/etc/pgbouncer/users.ini' do
+  owner node['pgbouncer']['os_user']
+  group node['pgbouncer']['os_group']
+  mode '0644'
+  action :create_if_missing
+end
+
+# Don't restart PgBouncer if not necessary to avoid breaking ongoing connections.
+# Execute "SHOW CONFIG" to list the settings that need PgBouncer to be restarted in order to be applied.
+# This list needs to be updated if any new attribute is added.
+settings_requiring_pgbouncer_restart = %w(listen_addr listen_port unix_socket_dir)
+restart_pgbouncer = begin
+  ::File.readlines('/etc/pgbouncer/pgbouncer.ini').reject { |line| line.chomp.empty? || line.start_with?(';', '#') || !line.match('=') }
+        .map { |line| line.chomp.split(/[[:blank:]]*=[[:blank:]]*/) }
+        .reject { |line_setting| line_setting.count != 2 || !settings_requiring_pgbouncer_restart.include?(line_setting[0]) }
+        .reduce(false) do |restart, line_setting|
+    restart || !!(node['pgbouncer'][line_setting[0]].to_s != line_setting[1] if node['pgbouncer'].key?(line_setting[0]))
+  end
+                    rescue Errno::ENOENT
+                      true
 end
 
 template '/etc/pgbouncer/pgbouncer.ini' do
   source 'pgbouncer.ini.erb'
-  cookbook 'pgbouncer-service'
   owner node['pgbouncer']['os_user']
   group node['pgbouncer']['os_group']
-  mode '644'
+  mode '0644'
   variables node['pgbouncer']
-  notifies :restart, resources(service: 'pgbouncer'), :delayed
-end
-
-template '/etc/pgbouncer/userlist.txt' do
-  source 'userlist.txt.erb'
-  owner node['pgbouncer']['os_user']
-  group node['pgbouncer']['os_group']
-  mode '644'
-  variables 'users' => node['pgbouncer']['userlist']
-  notifies :restart, resources(service: 'pgbouncer'), :delayed
-end
-
-template '/etc/default/pgbouncer' do
-  source 'pgbouncer.default.erb'
-  owner node['pgbouncer']['os_user']
-  group node['pgbouncer']['os_group']
-  mode '644'
-  notifies :restart, resources(service: 'pgbouncer'), :delayed
-end
-
-[node['pgbouncer']['log_file']].each do |file_name|
-  file file_name do
-    owner node['pgbouncer']['os_user']
-    group node['pgbouncer']['os_group']
-    mode '644'
-    action :create_if_missing
+  if restart_pgbouncer
+    notifies :restart, 'systemd_unit[pgbouncer.service]', :immediately
+  else
+    notifies :reload, 'systemd_unit[pgbouncer.service]', :immediately
   end
-end
-
-
-service 'pgbouncer' do
-  action [:enable, :start]
 end

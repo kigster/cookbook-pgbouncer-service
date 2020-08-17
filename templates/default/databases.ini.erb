@@ -1,0 +1,18 @@
+; foodb over unix socket
+;foodb =
+
+; redirect bardb to bazdb on localhost
+;bardb = host=localhost dbname=bazdb
+
+; access to dest database will go with single user
+;forcedb = host=127.0.0.1 port=300 user=baz password=foo client_encoding=UNICODE datestyle=ISO connect_query='SELECT 1'
+
+; use custom pool sizes
+;nondefaultdb = pool_size=50 reserve_pool_size=10
+
+; fallback connect string
+;* = host=testserver
+
+<% @databaselines.each do |databaseline| %>
+<%= databaseline %>
+<% end %>

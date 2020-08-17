@@ -22,7 +22,6 @@ Tested on Ubuntu 10.04. Uses the pgbouncer init script.
 
 * Debian
 * Ubuntu
-* (Joyent) SmartOS
 
 Attributes
 ==========
