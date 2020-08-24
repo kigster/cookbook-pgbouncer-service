@@ -10,6 +10,7 @@ systemd_unit 'pgbouncer.service' do
       User: 'postgres',
       ExecStart: '/usr/sbin/pgbouncer /etc/pgbouncer/pgbouncer.ini',
       ExecReload: '/bin/kill -HUP $MAINPID',
+      Restart: 'always',
       KillSignal: 'SIGINT',
     },
     Install: {
